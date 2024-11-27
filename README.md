@@ -16,6 +16,9 @@ conda install pytorch==1.6.0 torchvision==0.7.0 -c pytorch
 python setup.py develop
 ```
 
+## Pretrained models
+The pretrained model is available on [GoogleDrive](https://drive.google.com/file/d/1XsQschZNYcQK0bDXJNZgghrZHLZYFcJz/view?usp=sharing).
+
 ## Train from scratch
 
 ``` bash
