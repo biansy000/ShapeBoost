@@ -7,6 +7,7 @@ import copy
 import bisect
 
 from shapeboost.beta_decompose.beta_process2 import *
+from shapeboost.beta_decompose.beta_process_finer2_import import *
 from shapeboost.models.layers.smpl.SMPL import SMPL_layer
 import pickle as pk
 from easydict import EasyDict as edict

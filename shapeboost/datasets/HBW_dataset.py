@@ -186,19 +186,10 @@ class HBWDataset(data.Dataset):
         i = 0
         for img_path, bbox_det in pkl_labels.items():
             
-            if self.use_detected_bbox:
-                if bbox_det is None:
-                    bbox = (-1, -1, -1, -1)
-                else:
-                    bbox = bbox_det
+            if bbox_det is None:
+                bbox = (-1, -1, -1, -1)
             else:
-                img_path_list = img_path.split('/')[-4:]
-                label_path = '/'.join(img_path_list)
-                kpt_path = os.path.join('data/HBW/keypoints', label_path.replace('.png', '.json'))
-                with open(kpt_path, 'r') as f:
-                    kpt_label = json.load(f)
-                
-                bbox = self.keyps_to_bbox(kpt_label['people'][0])
+                bbox = bbox_det
 
             joint_img_17 = np.zeros((17, 3))
             joint_vis_17 = np.zeros((17, 3))

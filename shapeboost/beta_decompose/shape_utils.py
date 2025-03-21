@@ -1,6 +1,5 @@
 import numpy as np
 import torch
-from hybrik.models.layers.smpl.SMPL import SMPL_layer
 
 def compute_pve_neutral_pose_scale_corrected(predicted_smpl_shape, target_smpl_shape, gendered_smpl, 
         neutral_smpl=None, pred_smpl_neutral_pose_vertices=None, return_vertices=False):

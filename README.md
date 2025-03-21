@@ -17,7 +17,29 @@ python setup.py develop
 ```
 
 ## Pretrained models
-The pretrained model is available on [GoogleDrive](https://drive.google.com/file/d/1XsQschZNYcQK0bDXJNZgghrZHLZYFcJz/view?usp=sharing).
+The pretrained model is available on [Models](https://sjtueducn-my.sharepoint.com/:u:/g/personal/biansiyuan_sjtu_edu_cn/EdIPorN1O0hOqb4T0N68bakBLL_nz41EACPQGKYtecokIg?e=NszFHf).
+
+The files under ``model_files`` directory are available on [Files](https://sjtueducn-my.sharepoint.com/:u:/g/personal/biansiyuan_sjtu_edu_cn/EQpXmNG5-65HuqwbkooKd7sBTDzbCF7-elIBsCktz2Q_Mg?e=PGfvLX).
+
+
+## Code Structure
+```
+ShapeBoost/
+├── shapeboost/               
+├── examples/                   
+├── extra_files/                 
+├── model_files/
+│   └── smpl_v1.1.0
+│   └── ...
+└── ...
+```
+
+
+## Demo
+``` bash
+./scripts/demo.sh configs/hrw48_cam_2x_sratio_semi_analytical.yaml data/model_14_analytical_finetune.pth
+```
+
 
 ## Train from scratch
 

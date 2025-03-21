@@ -4,8 +4,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from .lbs import lbs, shapeboost, quat_to_rotmat,get_rest_pose_lbs, get_rest_pose_lbs_from_v, \
-    get_global_transform, shapeboost_get_global_transform, shapeboost_fromwidths, shapeboost_fromwidths_finer, \
+from .lbs import lbs, hybrik, quat_to_rotmat,get_rest_pose_lbs, get_rest_pose_lbs_from_v, \
+    get_global_transform, hybrik_get_global_transform, hybrik_fromwidths, hybrik_fromwidths_finer, \
     ts_decompose_rot
 
 try:
@@ -222,7 +222,7 @@ class SMPL_layer(nn.Module):
             vertices=vertices, joints=joints, rot_mats=rot_mats, joints_from_verts=joints_from_verts_h36m, twist_angle=twist_angle)
         return output
 
-    def shapeboost(self,
+    def hybrik(self,
                pose_skeleton,
                betas,
                phis,
@@ -258,7 +258,7 @@ class SMPL_layer(nn.Module):
             leaf_thetas = leaf_thetas.reshape(batch_size * 5, 4)
             leaf_thetas = quat_to_rotmat(leaf_thetas)
 
-        vertices, new_joints, rot_mats, joints_from_verts = shapeboost(
+        vertices, new_joints, rot_mats, joints_from_verts = hybrik(
             betas, global_orient, pose_skeleton, phis,
             self.v_template, self.shapedirs, self.posedirs,
             self.J_regressor, self.J_regressor_h36m, self.parents, self.children_map,
@@ -283,7 +283,7 @@ class SMPL_layer(nn.Module):
             vertices=vertices, joints=new_joints, rot_mats=rot_mats, joints_from_verts=joints_from_verts)
         return output
     
-    def shapeboost_fromwidth(self,
+    def hybrik_fromwidths(self,
                pose_skeleton,
                part_widths,
                phis,
@@ -317,7 +317,7 @@ class SMPL_layer(nn.Module):
         '''
         batch_size = pose_skeleton.shape[0]
 
-        vertices, new_joints, rot_mats, joints_from_verts, v_shaped, rest_J = shapeboost_fromwidths(
+        vertices, new_joints, rot_mats, joints_from_verts, v_shaped, rest_J = hybrik_fromwidths(
             part_widths, global_orient, pose_skeleton, phis,
             self.v_template, self.shapedirs, self.posedirs,
             self.J_regressor, self.J_regressor_h36m, self.parents, self.children_map,
@@ -399,11 +399,11 @@ class SMPL_layer(nn.Module):
         return get_global_transform(
             betas, pose, self.v_template, self.shapedirs, self.J_regressor, self.parents[:24], pose2rot=True)
 
-    def shapeboost_get_global_transform(self, pose_skeleton, phis,):
-        return shapeboost_get_global_transform(
+    def hybrik_get_global_transform(self, pose_skeleton, phis,):
+        return hybrik_get_global_transform(
             pose_skeleton, phis, self.v_template, self.J_regressor, self.parents, self.children_map)
     
-    def shapeboost_fromwidth_finer(self,
+    def hybrik_fromwidths_finer(self,
                pose_skeleton,
                part_widths,
                phis,
@@ -416,7 +416,7 @@ class SMPL_layer(nn.Module):
                return_29_jts=False,
                rotate=True,):
         '''
-        different from shapeboost_fromwidth(finer=True) in that it supports split_num > 2
+        different from hybrik_fromwidths(finer=True) in that it supports split_num > 2
         '''
         batch_size = pose_skeleton.shape[0]
 
@@ -424,7 +424,7 @@ class SMPL_layer(nn.Module):
         mean_part_width_finer_used = all_info.mean_part_width_finer
         part_seg_finer_used = all_info.part_seg_finer
 
-        vertices, new_joints, rot_mats, joints_from_verts, v_shaped, rest_J = shapeboost_fromwidths_finer(
+        vertices, new_joints, rot_mats, joints_from_verts, v_shaped, rest_J = hybrik_fromwidths_finer(
             part_widths, global_orient, pose_skeleton, phis,
             self.v_template, self.shapedirs, self.posedirs,
             self.J_regressor, self.J_regressor_h36m, self.parents, self.children_map,
@@ -476,6 +476,7 @@ class SMPL_layer(nn.Module):
 
         return rotmat_swing.reshape(batch_size, 24, 3, 3), rotmat_twist.reshape(batch_size, 23, 3, 3), angle_twist.reshape(batch_size, 23, 1)
 
+    
 def get_jts_29(vertices, jts):
     leaf_indices = [411, 2445, 5905, 3216, 6617] # head, left hand, right hand, left foot, right foot
     leaf_jts = vertices[:, leaf_indices]

@@ -300,7 +300,7 @@ def lbs(betas, pose, v_template, shapedirs, posedirs, J_regressor, J_regressor_h
     return verts, J_transformed, rot_mats, J_from_verts, twist_angle
 
 
-def shapeboost(betas, global_orient, pose_skeleton, phis,
+def hybrik(betas, global_orient, pose_skeleton, phis,
            v_template, shapedirs, posedirs, J_regressor, J_regressor_h36m, parents, children,
            lbs_weights, dtype=torch.float32, train=False, leaf_thetas=None):
     ''' Performs Linear Blend Skinning with the given shape and skeleton joints
@@ -422,7 +422,7 @@ refer_part_dict = {
 
 
 
-def shapeboost_fromwidths(part_widths, global_orient, pose_skeleton, phis,
+def hybrik_fromwidths(part_widths, global_orient, pose_skeleton, phis,
            v_template, shapedirs, posedirs, J_regressor, J_regressor_h36m, parents, children,
            lbs_weights, dtype=torch.float32, train=False, leaf_thetas=None, finer=False, rotate=True):
     
@@ -573,10 +573,14 @@ def blend_shapes_fromwidths(part_widths, skeleton, v_template, t_pose, lbs_weigh
     return new_vertices, target_t_pose
 
 
-from shapeboost.beta_decompose.beta_process_finer import part_names_finer, mean_part_width_finer, part_seg_finer
 mean_part_widths_list = [part_width_dict[n]['mean'] for n in joints_name_24]
-def blend_shapes_fromwidths_finer(part_widths_finer, skeleton, v_template, t_pose, lbs_weights, split_num=2, 
-        part_names_finer_used=part_names_finer, mean_part_width_finer_used=mean_part_width_finer, part_seg_finer_used=part_seg_finer):
+def blend_shapes_fromwidths_finer(part_widths_finer, skeleton, v_template, t_pose, lbs_weights, split_num=2):
+    from shapeboost.beta_decompose.beta_process_finer import part_names_finer, mean_part_width_finer, part_seg_finer
+    
+    part_names_finer_used=part_names_finer
+    mean_part_width_finer_used=mean_part_width_finer
+    part_seg_finer_used=part_seg_finer
+    
     target_t_pose = convert2tpose(skeleton, t_pose)
     batch_size = part_widths_finer.shape[0]
 
@@ -652,11 +656,9 @@ def blend_shapes_fromwidths_finer(part_widths_finer, skeleton, v_template, t_pos
 
 
 
-def shapeboost_fromwidths_finer(part_widths, global_orient, pose_skeleton, phis,
+def hybrik_fromwidths_finer(part_widths, global_orient, pose_skeleton, phis,
            v_template, shapedirs, posedirs, J_regressor, J_regressor_h36m, parents, children,
-           lbs_weights, dtype=torch.float32, train=False, leaf_thetas=None, rotate=True,
-           split_num=2, part_names_finer_used=part_names_finer, 
-           mean_part_width_finer_used=mean_part_width_finer, part_seg_finer_used=part_seg_finer):
+           lbs_weights, dtype=torch.float32, train=False, leaf_thetas=None, rotate=True, split_num=2):
     
     batch_size = pose_skeleton.shape[0]
     device = pose_skeleton.device
@@ -671,8 +673,7 @@ def shapeboost_fromwidths_finer(part_widths, global_orient, pose_skeleton, phis,
     # 1. Add shape contribution
     v_shaped, rest_J = blend_shapes_fromwidths_finer(
         part_widths, pose_skeleton, v_template, rest_J, lbs_weights,
-        split_num=split_num, part_names_finer_used=part_names_finer_used, 
-        mean_part_width_finer_used=mean_part_width_finer_used, part_seg_finer_used=part_seg_finer_used)
+        split_num=split_num)
     
     if not rotate:
         return None, None, None, None, v_shaped, rest_J
@@ -926,7 +927,7 @@ def get_global_transform(betas, pose, v_template, shapedirs, J_regressor, parent
     return transforms
 
 
-def shapeboost_get_global_transform(pose_skeleton, phis,
+def hybrik_get_global_transform(pose_skeleton, phis,
            v_template, J_regressor, parents, children):
     batch_size = pose_skeleton.shape[0]
     device = pose_skeleton.device

@@ -16,7 +16,6 @@ from shapeboost.models.layers.smpl.SMPL import SMPL_layer
 from shapeboost.beta_decompose.beta_process2 import vertice2capsule_fast, part_names, spine_joints, used_part_seg, part_names_ids
 from shapeboost.beta_decompose.beta_process_finer2 import vertice2capsule_finer, part_names_finer, spine_joints_finer, part_seg_finer
 from pytorch3d.transforms.rotation_conversions import axis_angle_to_matrix, euler_angles_to_matrix, matrix_to_axis_angle
-from shapeboost.beta_decompose.beta_process_multiview import get_tv_widths_ratio2d, mean_part_width_ratio
 
 s_coco_2_smpl_jt = [
     -1, 11, 12,
@@ -1214,35 +1213,6 @@ class SimpleTransform3DSMPLMask(object):
         part_widths_ratio = part_widths_new / np.linalg.norm(part_spines_3d, axis=-1) # widths / bone_len
 
         return part_widths_new, width_ratio_list, part_widths_ratio
-
-    def get_width_ratio_from2d(self, beta_out, transl_glob, transforms):
-        rest_out = self.smpl_layer.get_rest_pose(beta_out)
-        template_out = self.smpl_layer.get_rest_pose(torch.zeros_like(beta_out))
-
-        rest_v, rest_j = rest_out['vertices'], rest_out['joints']
-        temp_v, temp_j = template_out['vertices'], template_out['joints']
-        batch_size = rest_v.shape[0]
-        lbs_weights = self.smpl_layer.lbs_weights
-
-        inp_v = torch.cat([rest_v, temp_v], dim=0)
-        inp_j = torch.cat([rest_j, temp_j], dim=0)
-
-        transl_glob = torch.cat([transl_glob, transl_glob], dim=0)
-        transforms = torch.cat([transforms, transforms], dim=0)
-
-        tv_wr_2d = get_tv_widths_ratio2d(
-            inp_v.reshape(batch_size*2, -1, 3), 
-            inp_j.reshape(batch_size*2, -1, 3), 
-            lbs_weights, 
-            transl_glob.reshape(batch_size*2, 3),
-            transforms.reshape(batch_size*2, 24, 4, 4)
-        ).reshape(batch_size*2, -1)
-        
-        ratio_2d = tv_wr_2d[:batch_size] / tv_wr_2d[batch_size:]
-
-        width_ratio_from2d = ratio_2d * torch.tensor(mean_part_width_ratio)
-        return width_ratio_from2d
-
 
 def back_projection(uvd, pred_camera, focal_length=5000.):
     camScale = pred_camera[:1].reshape(1, -1)

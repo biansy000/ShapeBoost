@@ -294,6 +294,9 @@ class TrivialTransform3D(object):
             theta_24_weights = theta_24_weights.reshape(24 * 4)
             
             bbox = _center_scale_to_box(center, scale)
+            center_flipped = center.copy()
+            center_flipped[0] = imgwidth - center[0] - 1
+            bbox_flipped = _center_scale_to_box(center_flipped, scale)
 
         assert img.shape[2] == 3
         if self._train:
@@ -335,6 +338,7 @@ class TrivialTransform3D(object):
             'joint_root': torch.from_numpy(joint_root).float(),
             'depth_factor': torch.from_numpy(depth_factor).float(),
             'bbox': torch.Tensor(bbox).float(),
+            'bbox_flipped': torch.Tensor(bbox_flipped).float(),
             'img_center': torch.from_numpy(img_center).float(),
             'img_height': imght,
             'img_width': imgwidth,
