@@ -2,6 +2,15 @@
 
 The code is adapted from [Original Hybrik](https://github.com/Jeff-sjtu/HybrIK).
 
+
+## Examples
+
+
+| <img src="examples/img1.png" width="300"> | <img src="examples/example_recon/s_s_examples_img1.png_mesh_1.82_1.82.jpg" width="300"> | <img src="examples/img2.png" width="300"> | <img src="examples/example_recon/s_s_examples_img2.png_mesh_1.62_1.62.jpg" width="300"> |
+| :--------------------: | :----------: | :----------: | :----------: |
+| <img src="examples/img5.png" width="200"> | <img src="exp/examples_demo/shape_HBW_test_new/s_s_examples_img5.png_mesh_1.61_1.61.jpg" width="300"> | <img src="examples/img6.png" width="200"> | <img src="examples/example_recon/s_s_examples_img6.png_mesh_1.80_1.80.jpg" width="300"> |
+
+
 ## Installation instructions
 
 ``` bash
