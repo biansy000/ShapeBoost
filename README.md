@@ -15,11 +15,17 @@ The code is adapted from [Original Hybrik](https://github.com/Jeff-sjtu/HybrIK).
 
 ``` bash
 # 1. Create a conda virtual environment.
-conda create -n shapeboost python=3.6 -y
+conda create -n shapeboost python=3.10 -y
 conda activate shapeboost
 
-# 2. Install PyTorch
-conda install pytorch==1.6.0 torchvision==0.7.0 -c pytorch
+# 2. Install PyTorch, you may switch to other pytorch and cuda versions if necessary
+conda install -c "nvidia/label/cuda-11.8.0" cuda-toolkit
+pip install torch==2.4.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# Install Pytorch3D
+conda install -c iopath iopath
+conda install -c bottler nvidiacub
+conda install pytorch3d -c pytorch3d
 
 # 4. Install
 python setup.py develop
