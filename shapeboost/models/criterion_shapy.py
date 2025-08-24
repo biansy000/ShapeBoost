@@ -69,7 +69,7 @@ class ShapyLoss(nn.Module):
     def _initialize(self):
         s2a_male_path = 'data/pretrained_models/shapy_models/caesar-male_smplx-neutral-10betas/last_simple.ckpt'
         s2a_female_path = 'data/pretrained_models/shapy_models/caesar-female_smplx-neutral-10betas/last_simple.ckpt'
-        s2m_path = 'data/pretrained_models/shapy_models/width_bonelen2measurements_2layers_48.pth'
+        s2m_path = 'extra_files/width_bonelen2measurements_2layers_48.pth'
         
         self.s2a_male.load_state_dict(torch.load(s2a_male_path, map_location='cpu'))
         self.s2a_female.load_state_dict(torch.load(s2a_female_path, map_location='cpu'))
