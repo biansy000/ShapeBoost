@@ -34,7 +34,7 @@ python setup.py develop
 ## Pretrained models
 The pretrained model is available on [Models](https://sjtueducn-my.sharepoint.com/:u:/g/personal/biansiyuan_sjtu_edu_cn/EdIPorN1O0hOqb4T0N68bakBLL_nz41EACPQGKYtecokIg?e=NszFHf).
 
-The files under ``model_files`` directory are available on [Files](https://sjtueducn-my.sharepoint.com/:u:/g/personal/biansiyuan_sjtu_edu_cn/EQpXmNG5-65HuqwbkooKd7sBTDzbCF7-elIBsCktz2Q_Mg?e=PGfvLX).
+The extra files are available at [here](https://sjtueducn-my.sharepoint.com/:u:/g/personal/biansiyuan_sjtu_edu_cn/EQpXmNG5-65HuqwbkooKd7sBTDzbCF7-elIBsCktz2Q_Mg?e=PGfvLX) and [here](https://drive.google.com/drive/folders/1I1Amqzn1eqV-PFIbD5q3_qzyZs3zCX9C?usp=drive_link).
 
 
 ## Code Structure
